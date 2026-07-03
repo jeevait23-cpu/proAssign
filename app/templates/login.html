@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Login | MoviCloud{% endblock %}
+
+{% block content %}
+<section class="auth-panel">
+  <div class="brand-pane">
+    <div class="brand-mark">MC</div>
+    <p class="eyebrow">MoviCloud Private Limited</p>
+    <h1>Welcome back to your workspace.</h1>
+    <p class="lead">Sign in to assign tasks, monitor project progress, review deadlines, and keep every development cycle on schedule.</p>
+    <div class="trust-row">
+      <span>Secure sessions</span>
+      <span>MongoDB backed</span>
+      <span>Test ready</span>
+    </div>
+  </div>
+
+  <form class="form-card" method="post" novalidate>
+    <div class="form-heading">
+      <p class="eyebrow">Login</p>
+      <h2>Ready to Get Started?</h2>
+      <h5>
+        Every great project starts here.
+      </h5>
+    </div>
+
+    <label for="email">Email address</label>
+    <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required>
+
+    <button class="primary-button" type="submit">Login</button>
+    <p class="switch-link">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+  </form>
+</section>
+{% endblock %}

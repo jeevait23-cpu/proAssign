@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Project | MoviCloud{% endblock %}
+{% block body_class %}dashboard-shell retro-shell{% endblock %}
+
+{% block content %}
+<nav class="topbar retro-topbar">
+  <div class="topbar-brand">
+    <div class="brand-mark small">M</div>
+    <span>MoviCloud Studio</span>
+  </div>
+  <a class="ghost-button action-link" href="{{ url_for('dashboard.dashboard') }}">Back</a>
+</nav>
+
+<section class="edit-shell">
+  <form class="production-form edit-form" method="post">
+    <div class="form-heading">
+      <p class="eyebrow">Update</p>
+      <h1>Edit project</h1>
+    </div>
+
+    <label for="title">Project name</label>
+    <input id="title" name="title" type="text" value="{{ project.title }}" required>
+
+    <label for="client">Client company</label>
+    <input id="client" name="client" type="text" value="{{ project.client }}" required>
+
+    <div class="two-column-fields">
+      <div>
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+          {% for status in statuses %}
+            <option value="{{ status }}" {% if project.status == status %}selected{% endif %}>{{ status }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="priority">Priority</label>
+        <select id="priority" name="priority" required>
+          {% for priority in priorities %}
+            <option value="{{ priority }}" {% if project.priority == priority %}selected{% endif %}>{{ priority }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="two-column-fields">
+      <div>
+        <label for="deadline">Deadline</label>
+        <input id="deadline" name="deadline" type="date" value="{{ project.deadline }}">
+      </div>
+      <div>
+        <label for="budget">Budget</label>
+        <input id="budget" name="budget" type="text" value="{{ project.budget }}">
+      </div>
+    </div>
+
+    <label for="notes">Production notes</label>
+    <textarea id="notes" name="notes" rows="5">{{ project.notes }}</textarea>
+
+    <button class="primary-button" type="submit">Save Changes</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Production Dashboard | MoviCloud{% endblock %}
+{% block body_class %}dashboard-shell retro-shell{% endblock %}
+
+{% block content %}
+<nav class="topbar retro-topbar">
+  <div class="topbar-brand">
+    <div class="brand-mark small">M</div>
+    <span>MoviCloud Studio</span>
+  </div>
+  <form action="{{ url_for('auth.logout') }}" method="post">
+    <button class="ghost-button" type="submit">Logout</button>
+  </form>
+</nav>
+
+<section class="dashboard-hero retro-hero">
+  <div>
+    <p class="eyebrow">Software Production Board</p>
+    <h1>Ship work with a little old-school sparkle.</h1>
+    <p class="lead">Welcome {{ user.name }}. Manage client projects, assign development tasks, track progress, and ensure every milestone is delivered on time.</p>
+  </div>
+  <div class="status-card console-card">
+    <span class="status-dot"></span>
+    <div>
+      <strong>Signed in</strong>
+      <p>{{ user.email }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="metric-grid retro-metrics">
+  <article class="metric-card">
+    <span>{{ stats.total }}</span>
+    <h2>Total Projects</h2>
+    <p>All software production records created by this user.</p>
+  </article>
+  <article class="metric-card">
+    <span>{{ stats.active }}</span>
+    <h2>In Motion</h2>
+    <p>Discovery, design, development, and testing work still moving.</p>
+  </article>
+  <article class="metric-card">
+    <span>{{ stats.launched }}</span>
+    <h2>Launched</h2>
+    <p>Completed projects ready to celebrate and review.</p>
+  </article>
+</section>
+
+<section class="production-layout">
+  <form class="production-form" action="{{ url_for('dashboard.create_project') }}" method="post">
+    <div class="form-heading">
+      <p class="eyebrow">Create</p>
+      <h2>Add production project</h2>
+    </div>
+
+    <label for="title">Project name</label>
+    <input id="title" name="title" type="text" placeholder="Cloud billing portal" required>
+
+    <label for="client">Client company</label>
+    <input id="client" name="client" type="text" placeholder="Nova Systems Pvt Ltd" required>
+
+    <div class="two-column-fields">
+      <div>
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+          {% for status in statuses %}
+            <option value="{{ status }}">{{ status }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="priority">Priority</label>
+        <select id="priority" name="priority" required>
+          {% for priority in priorities %}
+            <option value="{{ priority }}">{{ priority }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="two-column-fields">
+      <div>
+        <label for="deadline">Deadline</label>
+        <input id="deadline" name="deadline" type="date">
+      </div>
+      <div>
+        <label for="budget">Budget</label>
+        <input id="budget" name="budget" type="text" placeholder="Rs 2,50,000">
+      </div>
+    </div>
+
+    <label for="notes">Production notes</label>
+    <textarea id="notes" name="notes" rows="4" placeholder="Sprint scope, QA notes, deployment checklist"></textarea>
+
+    <button class="primary-button" type="submit">Add Project</button>
+  </form>
+
+  <div class="project-board">
+    <div class="board-heading">
+      <div>
+        <p class="eyebrow">Read Update Delete</p>
+        <h2>Project records</h2>
+      </div>
+      <span>{{ stats.total }} saved</span>
+    </div>
+
+    {% if projects %}
+      <div class="project-list">
+        {% for project in projects %}
+          <article class="project-card">
+            <div class="project-card-header">
+              <div>
+                <p class="project-client">{{ project.client }}</p>
+                <h3>{{ project.title }}</h3>
+              </div>
+              <span class="status-pill status-{{ project.status|lower }}">{{ project.status }}</span>
+            </div>
+
+            <div class="project-meta">
+              <span>Priority: <strong>{{ project.priority }}</strong></span>
+              <span>Deadline: <strong>{{ project.deadline or "Open" }}</strong></span>
+              <span>Budget: <strong>{{ project.budget or "TBD" }}</strong></span>
+            </div>
+
+            {% if project.notes %}
+              <p class="project-notes">{{ project.notes }}</p>
+            {% endif %}
+
+            <div class="project-actions">
+              <a class="ghost-button action-link" href="{{ url_for('dashboard.edit_project', project_id=project._id) }}">Edit</a>
+              <form action="{{ url_for('dashboard.delete_project', project_id=project._id) }}" method="post">
+                <button class="danger-button" type="submit">Delete</button>
+              </form>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <strong>No projects yet.</strong>
+        <p>Add your first production project and it will be stored in MongoDB under your login.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
